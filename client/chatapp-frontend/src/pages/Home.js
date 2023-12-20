@@ -5,10 +5,10 @@ import Styles from "./Home.module.css";
 
 function Home() {
   return (
-    <Row>
+    <Row className={Styles.row}>
       <Col
         md={6}
-        className="d-flex flex-direction-column align-items-center justify-content-cener"
+        className="d-flex flex-direction-column align-items-center justify-content-cener col"
       >
         <div>
           <h1>Share the world with your friends</h1>
@@ -20,7 +20,7 @@ function Home() {
           </Link>
         </div>
       </Col>
-      <Col md={6} className={Styles.home__bg}></Col>
+      <Col md={6} className={`${Styles.home__bg} ${Styles.col}`}></Col>
     </Row>
   );
 }

@@ -15,7 +15,6 @@ function Navigation() {
           <Nav className="ms-auto">
             <Link to="/signup">Signup</Link>
             <Link to="/login">Login</Link>
-            <Link to="/chat">Chat</Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
