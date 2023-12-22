@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import SampleProfileImage from "../assets/images/sample_profile.jpeg";
+import { Link } from "react-router-dom";
+import Styles from "./Signup.module.css";
 
 function Signup() {
   const [signupInfo, setSignupInfo] = useState({
@@ -10,24 +13,40 @@ function Signup() {
     mobileNumber: "",
   });
 
+  // for handling the image related tasks
+  const [image, setImage] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
   const [formErrors, setFormErrors] = useState({});
+
+  const [imgError, setImgError] = useState("");
 
   const [isSubmit, setIsSubmit] = useState(false);
 
-
-
-
-
   const handleChange = async (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     setSignupInfo({
       ...signupInfo,
-      [name]: value
+      [name]: value,
     });
 
     console.log("Name & Value", name, value);
-  }
+  };
+
+  const changeImageHandler = async (e) => {
+    const file = e.target.files[0];
+
+    if (file.size >= 1048576) {
+      return alert("Max image file size is 1MB");
+    } else {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+
+      console.log("Image uploaded Successfully");
+    }
+  };
 
   const handleFormErrors = (signupInfo) => {
     const errors = {};
@@ -69,7 +88,9 @@ function Signup() {
 
     if (!signupInfo.confirmPassword.trim()) {
       errors.confirmPassword = "Confirm password is required.";
-    } else if (signupInfo.confirmPassword.trim() !== signupInfo.password.trim()) {
+    } else if (
+      signupInfo.confirmPassword.trim() !== signupInfo.password.trim()
+    ) {
       errors.confirmPassword = "Confirm password and password should be same.";
     }
 
@@ -81,20 +102,53 @@ function Signup() {
       errors.mobileNumber = "Phone number is not valid.";
     }
     return errors;
-  }
+  };
+
+  const uploadImage = async () => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "lbeudqg4");
+
+    try {
+      setUploadingImage(true);
+
+      let response = await fetch(
+        "https://api.cloudinary.com/v1_1/daa089qma/image/upload",
+        {
+          method: "post",
+          body: data,
+        }
+      );
+
+      const urlData = await response.json();
+      setUploadingImage(false);
+      return urlData.url;
+    } catch (e) {
+      setUploadingImage(false);
+      console.log("Error in uploading image:", e);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!image) {
+      setImgError("Please upload profile image!");
+      return;
+    }
+
+    const url = await uploadImage(image);
+
+    console.log("URL:", url);
 
     setFormErrors(handleFormErrors(signupInfo));
 
     setIsSubmit(true);
   };
 
-
   useEffect(() => {
     console.log("formErrors:", formErrors);
-    if(isSubmit && Object.keys(formErrors).length === 0) {
+    if (isSubmit && Object.keys(formErrors).length === 0) {
       console.log("Signup API");
     }
   });
@@ -103,10 +157,34 @@ function Signup() {
     <>
       <Container>
         <Row>
-          <Col md={5}></Col>
-          <Col md={7}>
-            <h3>Signup for Chatbot</h3>
-            <form onSubmit={handleSubmit}>
+          <Col
+            md={7}
+            className="d-flex align-items-center justify-content-center flex-direction-column"
+          >
+            <form
+              style={{ width: "80%", maxWidth: 500 }}
+              onSubmit={handleSubmit}
+            >
+              <h1 className="text-center">Create Account</h1>
+              <div className={Styles.profileContainer}>
+                <img
+                  src={imagePreview || SampleProfileImage}
+                  className={Styles.profilePic}
+                />
+                <label htmlFor="image-upload" className="image-upload-label">
+                  <i
+                    className={`${Styles.addPictureIcon} fas fa-plus-circle`}
+                  ></i>
+                </label>
+                <input
+                  type="file"
+                  id="image-upload"
+                  hidden
+                  accept="image/png, image/jpeg"
+                  onChange={changeImageHandler}
+                />
+                {imgError && <p className="alert alert-danger">{imgError}</p>}
+              </div>
               <label>Name</label>
               <br />
               <input
@@ -118,7 +196,11 @@ function Signup() {
                 maxLength={40}
                 required
               />
-              {formErrors.name && (<p><small>{formErrors.name}</small></p>)}
+              {formErrors.name && (
+                <p>
+                  <small>{formErrors.name}</small>
+                </p>
+              )}
               <br /> <br />
               <label>Email</label>
               <br />
@@ -131,7 +213,11 @@ function Signup() {
                 maxLength={40}
                 required
               />
-              {formErrors.email && (<p><small>{formErrors.email}</small></p>)}
+              {formErrors.email && (
+                <p>
+                  <small>{formErrors.email}</small>
+                </p>
+              )}
               <br /> <br />
               <label>Password</label>
               <br />
@@ -144,7 +230,11 @@ function Signup() {
                 maxLength={30}
                 required
               />
-              {formErrors.password && (<p><small>{formErrors.password}</small></p>)}
+              {formErrors.password && (
+                <p>
+                  <small>{formErrors.password}</small>
+                </p>
+              )}
               <br /> <br />
               <label>Confirm Password</label>
               <br />
@@ -157,7 +247,11 @@ function Signup() {
                 maxLength={30}
                 required
               />
-              {formErrors.confirmPassword && (<p><small>{formErrors.confirmPassword}</small></p>)}
+              {formErrors.confirmPassword && (
+                <p>
+                  <small>{formErrors.confirmPassword}</small>
+                </p>
+              )}
               <br /> <br />
               <label>Mobile Number</label>
               <br />
@@ -170,11 +264,21 @@ function Signup() {
                 maxLength={10}
                 required
               />
-              {formErrors.mobileNumber && (<p><small>{formErrors.mobileNumber}</small></p>)}
+              {formErrors.mobileNumber && (
+                <p>
+                  <small>{formErrors.mobileNumber}</small>
+                </p>
+              )}
               <br /> <br />
-              <button type="submit">Sign UP</button>
+              <Button variant="primary" type="submit">
+                { uploadingImage ? "Signing you up..." : "Signup"}
+              </Button>
+              <div className="py-4">
+                <p className="text-center">Already have an account? <Link to="/login">Login</Link></p>
+              </div>
             </form>
           </Col>
+          <Col md={5} className={Styles.signup__bg}></Col>
         </Row>
       </Container>
     </>

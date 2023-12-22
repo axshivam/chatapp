@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Container, Form, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Styles from "./Login.module.css";
 
 function Login() {
   const [loginInfo, setLoginInfo] = useState({
@@ -57,10 +59,10 @@ function Login() {
   return (
     <Container>
       <Row>
-        <Col md={5}></Col>
+        <Col className={Styles.loginBg} md={5}></Col>
         <Col md={7}>
           <h3>Login for Chatbot</h3>
-          <Form onSubmit={handleSubmit}>
+          <Form style={{ width: "80%", maxWidth: 500 }} onSubmit={handleSubmit}>
             <label>Email Address</label>
             <br />
             <input
@@ -95,7 +97,14 @@ function Login() {
             )}
             <br />
             <br />
-            <Button type="submit">Log in</Button>
+            <Button variant="primary" type="submit">
+              Login
+            </Button>
+            <div className="py-4">
+              <p className="text-center">
+                Don't have an account? <Link to="/signup">Signup</Link>
+              </p>
+            </div>
           </Form>
         </Col>
       </Row>
