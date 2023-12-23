@@ -5,10 +5,17 @@ const loginAPI = async (data) => {
 
   const response = await fetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   });
 
-  return response;
+  const responseData = await response.json();
+
+  console.log("responseData", responseData);
+
+  return responseData;
 };
 
 const signUpAPI = async (data) => {
@@ -16,8 +23,15 @@ const signUpAPI = async (data) => {
 
   const response = await fetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   });
+
+  const responseData = await response.json();
+
+  return responseData;
 };
 
-export default { loginAPI, signUpAPI };
+export { loginAPI, signUpAPI };

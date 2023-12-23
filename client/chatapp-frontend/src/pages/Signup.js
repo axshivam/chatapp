@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import SampleProfileImage from "../assets/images/sample_profile.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signUpAPI } from "../services/api";
 import Styles from "./Signup.module.css";
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [signupInfo, setSignupInfo] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
     mobileNumber: "",
+    url: "",
   });
 
   // for handling the image related tasks
@@ -132,12 +136,17 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!image) {
+    if (!image) {
       setImgError("Please upload profile image!");
       return;
     }
 
     const url = await uploadImage(image);
+
+    setSignupInfo({
+      ...signupInfo,
+      url: url,
+    });
 
     console.log("URL:", url);
 
@@ -146,12 +155,49 @@ function Signup() {
     setIsSubmit(true);
   };
 
+  const signUpHandler = async () => {
+    const data = {
+      name: signupInfo.name,
+      email: signupInfo.email,
+      password: signupInfo.password,
+      phoneNumber: signupInfo.mobileNumber,
+      picture: signupInfo.url,
+    };
+
+    console.log("Data:", data);
+
+    try {
+      const res = await signUpAPI(data);
+
+      console.log("Response:", res);
+
+      if (res.status === "online") {
+        setSignupInfo({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          mobileNumber: "",
+          url: "",
+        });
+
+        navigate("/chat");
+
+        return;
+      }
+    } catch (error) {
+      console.log("An error occurred during signup:", error);
+
+      return;
+    }
+  };
+
   useEffect(() => {
     console.log("formErrors:", formErrors);
     if (isSubmit && Object.keys(formErrors).length === 0) {
-      console.log("Signup API");
+      signUpHandler();
     }
-  });
+  }, [formErrors]);
 
   return (
     <>
@@ -271,10 +317,12 @@ function Signup() {
               )}
               <br /> <br />
               <Button variant="primary" type="submit">
-                { uploadingImage ? "Signing you up..." : "Signup"}
+                {uploadingImage ? "Signing you up..." : "Signup"}
               </Button>
               <div className="py-4">
-                <p className="text-center">Already have an account? <Link to="/login">Login</Link></p>
+                <p className="text-center">
+                  Already have an account? <Link to="/login">Login</Link>
+                </p>
               </div>
             </form>
           </Col>
