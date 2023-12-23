@@ -1,0 +1,6 @@
+const USER_TYPES = {
+    SET_USERNAME: "SET_USERNAME",
+    SET_IS_LOGGED_IN: "SET_IS_LOGGED_IN",
+}
+
+export { USER_TYPES };
