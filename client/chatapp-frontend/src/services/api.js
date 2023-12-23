@@ -34,4 +34,20 @@ const signUpAPI = async (data) => {
   return responseData;
 };
 
-export { loginAPI, signUpAPI };
+const logOutAPI = async (data) => {
+  const url = `${URLS.BASE_URL}${URLS.LOGOUT_URL}`;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  console.log("Logout api response:", response);
+
+  return response;
+}
+
+export { loginAPI, signUpAPI, logOutAPI };

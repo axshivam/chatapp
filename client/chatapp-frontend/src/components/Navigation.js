@@ -13,6 +13,7 @@ import {
 } from "../redux/actions/index";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { logOutAPI } from "../services/api";
 import logo from "../assets/images/logo.png";
 
 function Navigation() {
@@ -22,16 +23,29 @@ function Navigation() {
 
   console.log("User:", user);
 
-  const handleLogout = async () => {
-    dispatch(setUsername(""));
-    dispatch(setUserLoginStatus(false));
-    dispatch(setUserProfileName(""));
-    dispatch(setUserOnlineStatus("offline"));
-    dispatch(setUserPhoneNumber(""));
-    dispatch(setUserPicture(""));
+  const handleLogout = async (e) => {
+    e.preventDefault();
 
-    navigate("/login");
-    
+    const data = {
+      email: user.username,
+    };
+
+    console.log("Data:", data);
+
+    const response = await logOutAPI(data);
+
+    // TODO:
+
+    if (response.status === 200) {
+      dispatch(setUsername(""));
+      dispatch(setUserLoginStatus(false));
+      dispatch(setUserProfileName(""));
+      dispatch(setUserOnlineStatus("offline"));
+      dispatch(setUserPhoneNumber(""));
+      dispatch(setUserPicture(""));
+
+      navigate("/login");
+    }
   };
   return (
     <Navbar bg="light" expand="lg">
