@@ -1,1 +1,8 @@
-export { setUsername, setUserLoginStatus } from "./user-actions";
+export {
+  setUsername,
+  setUserLoginStatus,
+  setUserOnlineStatus,
+  setUserPicture,
+  setUserProfileName,
+  setUserPhoneNumber,
+} from "./user-actions";

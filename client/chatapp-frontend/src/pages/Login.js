@@ -1,11 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Container, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppContext } from "../context/appContext";
+import {
+  setUsername,
+  setUserLoginStatus,
+  setUserProfileName,
+  setUserPicture,
+  setUserOnlineStatus,
+  setUserPhoneNumber,
+} from "../redux/actions/index";
+
 import { loginAPI } from "../services/api";
 import Styles from "./Login.module.css";
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { socket} = useContext(AppContext);
 
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -68,6 +82,15 @@ function Login() {
         email: "",
         password: "",
       });
+
+      dispatch(setUsername(data.email));
+      dispatch(setUserLoginStatus(true));
+      dispatch(setUserProfileName(res.name));
+      dispatch(setUserOnlineStatus(res.status));
+      dispatch(setUserPhoneNumber(res.phoneNumber));
+      dispatch(setUserPicture(res.picture));
+
+      socket.emit("new-user");
 
       navigate("/chat");
 

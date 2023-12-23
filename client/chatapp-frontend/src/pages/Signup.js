@@ -2,11 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import SampleProfileImage from "../assets/images/sample_profile.jpeg";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  setUsername,
+  setUserLoginStatus,
+  setUserProfileName,
+  setUserPicture,
+  setUserOnlineStatus,
+  setUserPhoneNumber,
+} from "../redux/actions/index";
 import { signUpAPI } from "../services/api";
 import Styles from "./Signup.module.css";
 
 function Signup() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -180,6 +190,13 @@ function Signup() {
           mobileNumber: "",
           url: "",
         });
+
+        dispatch(setUsername(data.email));
+        dispatch(setUserLoginStatus(true));
+        dispatch(setUserProfileName(data.name));
+        dispatch(setUserOnlineStatus("online"));
+        dispatch(setUserPhoneNumber(data.phoneNumber));
+        dispatch(setUserPicture(data.picture));
 
         navigate("/chat");
 
