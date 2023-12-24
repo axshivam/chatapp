@@ -6,6 +6,8 @@ const initialState = {
   name: "",
   picture: "",
   status: "offline",
+  _id: "",
+  newMessages: {},
 };
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -38,6 +40,16 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         phoneNumber: action.payload.phoneNumber,
+      };
+    case USER_TYPES.SET___ID:
+      return {
+        ...state,
+        _id: action.payload._id,
+      };
+    case USER_TYPES.SET_NEW_MESSAGES:
+      return {
+        ...state,
+        newMessages: action.payload.newMessages,
       };
 
     default:

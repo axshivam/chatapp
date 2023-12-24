@@ -10,6 +10,8 @@ import {
   setUserPicture,
   setUserOnlineStatus,
   setUserPhoneNumber,
+  setUserID,
+  setUserNewMessages,
 } from "../redux/actions/index";
 
 import { loginAPI } from "../services/api";
@@ -19,7 +21,7 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { socket} = useContext(AppContext);
+  const { socket } = useContext(AppContext);
 
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -89,6 +91,8 @@ function Login() {
       dispatch(setUserOnlineStatus(res.status));
       dispatch(setUserPhoneNumber(res.phoneNumber));
       dispatch(setUserPicture(res.picture));
+      dispatch(setUserID(res._id));
+      dispatch(setUserNewMessages(res.newMessages));
 
       socket.emit("new-user");
 

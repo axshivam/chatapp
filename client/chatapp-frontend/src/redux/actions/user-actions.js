@@ -54,6 +54,24 @@ const setUserPhoneNumber = (phoneNumber) => {
   };
 };
 
+const setUserID = (_id) => {
+  return {
+    type: USER_TYPES.SET___ID,
+    payload: {
+      _id: _id,
+    },
+  };
+};
+
+const setUserNewMessages = (newMessages) => {
+  return {
+    type: USER_TYPES.SET_NEW_MESSAGES,
+    payload: {
+      newMessages: newMessages,
+    },
+  };
+};
+
 export {
   setUsername,
   setUserLoginStatus,
@@ -61,4 +79,6 @@ export {
   setUserPicture,
   setUserProfileName,
   setUserPhoneNumber,
+  setUserID,
+  setUserNewMessages,
 };
