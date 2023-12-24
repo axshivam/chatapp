@@ -10,6 +10,8 @@ import {
   setUserPicture,
   setUserOnlineStatus,
   setUserPhoneNumber,
+  setUserID,
+  setUserNewMessages,
 } from "../redux/actions/index";
 import { signUpAPI } from "../services/api";
 import Styles from "./Signup.module.css";
@@ -197,6 +199,8 @@ function Signup() {
         dispatch(setUserOnlineStatus("online"));
         dispatch(setUserPhoneNumber(data.phoneNumber));
         dispatch(setUserPicture(data.picture));
+        dispatch(setUserID(res._id));
+        dispatch(setUserNewMessages(res.newMessages));
 
         navigate("/chat");
 

@@ -3,7 +3,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import Styles from "./MessageForm.module.css";
 import { useSelector } from "react-redux";
 import { AppContext } from "../context/appContext";
-
+ 
 function MessageForm() {
   const [message, setMessage] = useState("");
 
@@ -42,7 +42,7 @@ function MessageForm() {
     setMessages(roomMessages);
   });
 
-  console.log("Messages", messages);
+  // console.log("Messages Main", messages[0].messagesByDate[0].content);
   return (
     <>
       <div className={Styles.messagesOutput}>
@@ -50,15 +50,15 @@ function MessageForm() {
           <div className="alert alert-danger">Please Login</div>
         )}
 
-        {user.isLoggedIn && messages.map(({_id: date, messageByDate}, idx) => (
+        {user.isLoggedIn && messages.map(({_id: date, messagesByDate}, idx) => (
           <div key={idx}>
             <p className="alert alert-info text-center message-date-indicator">{date}</p>
-            {messageByDate?.map(({content, time, from: sender}, msgIdx) => {
+            {messagesByDate?.map(({content, time, from: sender}, msgIdx) => (
               <div className="message" key={msgIdx}>
                 <p>{content}</p>
                 <p className="message-timestamp-left">{time}</p>
               </div>
-            })}
+            ))}
           </div>
         ))}
       </div>

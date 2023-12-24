@@ -5,4 +5,6 @@ export {
   setUserPicture,
   setUserProfileName,
   setUserPhoneNumber,
+  setUserID,
+  setUserNewMessages,
 } from "./user-actions";
