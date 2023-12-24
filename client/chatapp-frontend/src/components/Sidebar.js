@@ -24,7 +24,7 @@ function Sidebar() {
       return alert("Please Login");
     }
 
-    // socket.emit("join-room", room);
+    socket.emit("join-room", room);
 
     setCurrentRoom(room);
 
