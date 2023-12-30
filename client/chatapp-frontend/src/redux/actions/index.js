@@ -7,4 +7,6 @@ export {
   setUserPhoneNumber,
   setUserID,
   setUserNewMessages,
+  addNotifications,
+  resetNotifications,
 } from "./user-actions";

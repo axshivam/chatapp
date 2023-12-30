@@ -1,11 +1,15 @@
 import React, { useContext, useEffect } from "react";
-import { ListGroup } from "react-bootstrap";
+import { ListGroup, Row, Col } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { AppContext } from "../context/appContext";
 import URLS from "../utils/endpoint-urls";
+import { addNotifications, resetNotifications } from "../redux/actions";
+import { useDispatch } from "react-redux";
+import Styles from "./Sidebar.module.css";
 
 function Sidebar() {
   const user = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
 
   const {
     socket,
@@ -33,6 +37,12 @@ function Sidebar() {
     }
 
     // dispatch for notifications
+
+    dispatch(resetNotifications(room));
+
+    socket.off("notifications").on("notifications", (room) => {
+      dispatch(addNotifications(room));
+    });
   };
 
   useEffect(() => {
@@ -96,7 +106,12 @@ function Sidebar() {
               justifyContent: "space-between",
             }}
           >
-            {room} {currentRoom !== room && <span></span>}
+            {room}{" "}
+            {currentRoom !== room && (
+              <span className="badge rounded-pill  bg-primary">
+                {user.newMessages[room] ? user.newMessages[room] : ""}
+              </span>
+            )}
           </ListGroup.Item>
         ))}
       </ListGroup>
@@ -110,7 +125,32 @@ function Sidebar() {
             onClick={() => handlePrivateMemberMsg(member)}
             disabled={member?._id === user._id}
           >
-            {member.name}
+            <Row>
+              <Col xs={2} className={Styles.memberStatus}>
+                <img src={member.picture} className={Styles.memberStatusImg} />
+                {member.status == "online" ? (
+                  <i
+                    className={`${Styles.sidebarOnlineStatus} fas fa-circle`}
+                  ></i>
+                ) : (
+                  <i
+                    className={`${Styles.sidebarOfflineStatus} fas fa-circle`}
+                  ></i>
+                )}
+              </Col>
+              <Col xs={9}>
+                {member.name}
+                {member._id === user?._id && " (You)"}
+                {member.status == "offline" && " (Offline)"}
+              </Col>
+              <Col xs={1}>
+                <span className="badge rounded-pill bg-primary">
+                  {user.newMessages[orderIds(member._id, user._id)]
+                    ? user.newMessages[orderIds(member._id, user._id)]
+                    : ""}
+                </span>
+              </Col>
+            </Row>
           </ListGroup.Item>
         ))}
       </ListGroup>

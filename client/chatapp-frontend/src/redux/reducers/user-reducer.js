@@ -52,6 +52,26 @@ const userReducer = (state = initialState, action) => {
         newMessages: action.payload.newMessages,
       };
 
+    case USER_TYPES.ADD_NOTIFICATIONS:
+      const { room } = action.payload;
+      return {
+        ...state,
+        newMessages: {
+          ...state.newMessages,
+          [room]: (state.newMessages[room] || 0) + 1,
+        },
+      };
+
+    case USER_TYPES.RESET_NOTIFICATIONS:
+      const { room: roomToReset } = action.payload;
+      return {
+        ...state,
+        newMessages: {
+          ...state.newMessages,
+          [roomToReset]: 0,
+        },
+      };
+
     default:
       return state; // Add a default case to return the current state
   }
