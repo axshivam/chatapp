@@ -72,6 +72,24 @@ const setUserNewMessages = (newMessages) => {
   };
 };
 
+const addNotifications = (room) => {
+  return {
+    type: USER_TYPES.ADD_NOTIFICATIONS,
+    payload: {
+      room: room,
+    },
+  };
+};
+
+const resetNotifications = (room) => {
+  return {
+    type: USER_TYPES.RESET_NOTIFICATIONS,
+    payload: {
+      room: room,
+    },
+  };
+};
+
 export {
   setUsername,
   setUserLoginStatus,
@@ -81,4 +99,6 @@ export {
   setUserPhoneNumber,
   setUserID,
   setUserNewMessages,
+  addNotifications,
+  resetNotifications,
 };
