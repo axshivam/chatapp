@@ -128,13 +128,14 @@ function MessageForm() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               disabled={!user.isLoggedIn}
+              style={{padding: 10, margin: 5, borderRadius: 50, width: "80vh"}}
             />
           </Col>
           <Col md={1}>
             <Button
               variant="primary"
               type="submit"
-              style={{ width: "100%", backgroundColor: "orange" }}
+              style={{ width: "100%", backgroundColor: "orange", margin: 5 }}
               disabled={!user.isLoggedIn}
             >
               <i className="fas fa-paper-plane"></i>
